@@ -33,14 +33,14 @@ class Main extends egret.DisplayObjectContainer {
      * 加载进度界面
      * Process interface loading
      */
-    private loadingView:LoadingUI;
+    private loadingView: LoadingUI;
 
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
 
-    private onAddToStage(event:egret.Event) {
+    private onAddToStage(event: egret.Event) {
         //设置加载进度界面
         //Config to load process interface
         this.loadingView = new LoadingUI();
@@ -56,7 +56,7 @@ class Main extends egret.DisplayObjectContainer {
      * 配置文件加载完成,开始预加载preload资源组。
      * configuration file loading is completed, start to pre-load the preload resource group
      */
-    private onConfigComplete(event:RES.ResourceEvent):void {
+    private onConfigComplete(event: RES.ResourceEvent): void {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
@@ -69,7 +69,7 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载完成
      * Preload resource group is loaded
      */
-    private onResourceLoadComplete(event:RES.ResourceEvent):void {
+    private onResourceLoadComplete(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
@@ -84,7 +84,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onItemLoadError(event:RES.ResourceEvent):void {
+    private onItemLoadError(event: RES.ResourceEvent): void {
         console.warn("Url:" + event.resItem.url + " has failed to load");
     }
 
@@ -92,7 +92,7 @@ class Main extends egret.DisplayObjectContainer {
      * 资源组加载出错
      *  The resource group loading failed
      */
-    private onResourceLoadError(event:RES.ResourceEvent):void {
+    private onResourceLoadError(event: RES.ResourceEvent): void {
         //TODO
         console.warn("Group:" + event.groupName + " has failed to load");
         //忽略加载失败的项目
@@ -104,17 +104,31 @@ class Main extends egret.DisplayObjectContainer {
      * preload资源组加载进度
      * Loading process of preload resource group
      */
-    private onResourceProgress(event:RES.ResourceEvent):void {
+    private onResourceProgress(event: RES.ResourceEvent): void {
         if (event.groupName == "preload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
     }
 
-    private createGameScene():void {
+    private createGameScene(): void {
         var player = new Player();
-        var Fordring = new Hero();
+        var Fordring = new Hero(1, 5, 10);
         var Ashbringer = new Weapon();
-        var holystar = new Jewel();
+        var Ruby = new Jewel();
+        player.setHero(Fordring);
+        Fordring.setWeapon(Ashbringer);
+        Ashbringer.setJewel(Ruby);
+        console.log("玩家战斗力：" + player.getFightPower());
+        console.log("英雄：提里奥·弗丁，等级：" + Fordring.level
+            + " 最大生命值：" + Fordring.maxHp
+            + " 攻击力：" + Fordring.attack
+            + " 战斗力：" + Fordring.fightPower);
+        console.log("武器：灰烬使者，稀有度：" + Ashbringer.quality
+            + " 攻击力：" + Ashbringer.attack
+            + " 战斗力:" + Ashbringer.fightPower);
+        console.log("珠宝：红宝石，稀有度：" + Ruby.quality
+            + " 攻击力：" + Ruby.attack
+            + " 战斗力：" + Ruby.fightPower);
     }
 
 }
